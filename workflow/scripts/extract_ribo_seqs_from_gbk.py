@@ -2,6 +2,7 @@
 
 from Bio import SeqIO
 from Bio.Seq import Seq
+import re
 from Bio.SeqRecord import SeqRecord
 from Bio.SeqFeature import SeqFeature
 import sys
@@ -31,7 +32,8 @@ for rec in records:
     for feature in rec.features:
         if feature.type == "CDS":
           try:
-            if 'ribosomal protein' in ''.join(feature.qualifiers['product']):
+            product = ''.join(feature.qualifiers['product'])
+            if re.search(r'\bribosomal( subunit)? protein\b', product, re.IGNORECASE):
                 print(feature.qualifiers['locus_tag'], feature.qualifiers['product'])
                 print("ribo_count is", ribo_count, "seen_before", seen_before)
                 if ribo_count > 16:
